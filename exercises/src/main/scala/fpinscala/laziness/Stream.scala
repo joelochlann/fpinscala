@@ -17,7 +17,17 @@ trait Stream[+A] {
     case Empty => None
     case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
   }
-  def take(n: Int): Stream[A] = ???
+
+  // Questions:
+  // what exactly occurs when I do t(), but wrap that in a () => thingy??
+  def take(n: Int): Stream[A] = {
+    def go(i: Int, as: Stream[A]): Stream[A] = as match {
+      case Cons(h, t) if i < n => Cons(h, () => go(i + 1, t()))
+      case _ => Empty
+    }
+
+    go(0, this)
+  }
 
   def drop(n: Int): Stream[A] = ???
 
@@ -39,11 +49,12 @@ trait Stream[+A] {
   def toList: List[A] = {
     def go(as: Stream[A]): List[A] = as match {
       case Empty => Nil
-      case Cons(h, as) => h() :: go(as())
+      case Cons(h, t) => h() :: go(t())
     }
 
     go(this)
   }
+
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
