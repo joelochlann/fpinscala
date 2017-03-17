@@ -31,6 +31,19 @@ trait Stream[+A] {
   // writing your own function signatures.
 
   def startsWith[B](s: Stream[B]): Boolean = ???
+
+  // QUESTIONS:
+  // why does type param [A] on method break things?
+  // why can I not put () => Stream[A] as the type of as in go?
+
+  def toList: List[A] = {
+    def go(as: Stream[A]): List[A] = as match {
+      case Empty => Nil
+      case Cons(h, as) => h() :: go(as())
+    }
+
+    go(this)
+  }
 }
 case object Empty extends Stream[Nothing]
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
