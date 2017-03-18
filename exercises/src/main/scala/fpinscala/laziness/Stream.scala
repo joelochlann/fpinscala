@@ -40,13 +40,9 @@ trait Stream[+A] {
 
   def drop(n: Int): Stream[A] = ???
 
-  def takeWhile(p: A => Boolean): Stream[A] = {
-    def go(as: Stream[A]): Stream[A] = as match {
-      case Cons(h, t) if p(h()) => Cons(h, () => go(t()))
-      case _ => Empty
-    }
-
-    go(this)
+  def takeWhile(p: A => Boolean): Stream[A] = this match {
+    case Cons(h, t) if p(h()) => cons(h(), t().takeWhile(p))
+    case _ => Empty
   }
 
   def forAll(p: A => Boolean): Boolean = ???
