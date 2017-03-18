@@ -60,7 +60,6 @@ trait Stream[+A] {
   // QUESTIONS:
   // why does type param [A] on method break things?
   // why can I not put () => Stream[A] as the type of as in go?
-
   def toList: List[A] = {
     def go(as: Stream[A]): List[A] = as match {
       case Empty => Nil
@@ -70,11 +69,19 @@ trait Stream[+A] {
     go(this)
   }
 
-  def toListTailRecursive: List[A] = ???
+  def toListTailRecursive: List[A] = {
+    @annotation.tailrec
+    def go(stream: Stream[A], list: List[A]): List[A] = stream match {
+      case Empty => list
+      case Cons(h, t) => go(t(), h() :: list)
+    }
+
+    go(this, List()).reverse
+  }
 
   def toListRecursive: List[A] = this match {
     case Empty => Nil
-    case Cons(h, t) => h() :: t().toList
+    case Cons(h, t) => h() :: t().toListRecursive
   }
 }
 
