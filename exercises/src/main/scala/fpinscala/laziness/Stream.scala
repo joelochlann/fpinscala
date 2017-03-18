@@ -45,7 +45,12 @@ trait Stream[+A] {
     case _ => Empty
   }
 
-  def forAll(p: A => Boolean): Boolean = ???
+  // Does this terminate early? I think it does...
+  def forAll(p: A => Boolean): Boolean = this match {
+    case Cons(h, _) if !p(h()) => false
+    case Cons(_, t) => t() forAll p
+    case _ => true
+  }
 
   def headOption: Option[A] = ???
 
