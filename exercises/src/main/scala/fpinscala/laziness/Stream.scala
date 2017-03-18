@@ -31,6 +31,7 @@ trait Stream[+A] {
 
   // QUESTIONS:
   // Why does the answer have a separate case for n == 1?
+  // Would the answer suffer from stack overflow?
   def takeAlt(n: Int): Stream[A] = this match {
     case Cons(h, t) if n > 0 => Cons(h, () => t().takeAlt(n - 1))
     case _ => Empty
