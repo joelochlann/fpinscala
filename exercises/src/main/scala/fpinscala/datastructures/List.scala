@@ -50,13 +50,27 @@ object List { // `List` companion object. Contains functions for creating and wo
     foldRight(ns, 1.0)(_ * _) // `_ * _` is more concise notation for `(x,y) => x * y`; see sidebar
 
 
-  def tail[A](l: List[A]): List[A] = ???
+  def tail[A](l: List[A]): List[A] = l match {
+    case Cons(h, t) => t
+    case _ => Nil
+  }
 
-  def setHead[A](l: List[A], h: A): List[A] = ???
+  def setHead[A](l: List[A], h: A): List[A] = l match {
+    case Cons(_, t) => Cons(h, t)
+    case x => x
+  }
 
-  def drop[A](l: List[A], n: Int): List[A] = ???
+  // QUESTION:
+  // Any advantage to answer style over putitng the condition in the case statement?
+  def drop[A](l: List[A], n: Int): List[A] = l match {
+    case Cons(_, t) if n > 0 => drop(t, n - 1)
+    case _ => l
+  }
 
-  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = ???
+  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = l match {
+    case Cons(h, t) if f(h) => dropWhile(t, f)
+    case _ => l
+  }
 
   def init[A](l: List[A]): List[A] = ???
 

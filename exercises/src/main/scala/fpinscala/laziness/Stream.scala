@@ -52,6 +52,8 @@ trait Stream[+A] {
     case _ => true
   }
 
+  def forAllFoldRight(p: A => Boolean): Boolean = ???
+
   def headOption: Option[A] = ???
 
   // 5.7 map, filter, append, flatmap using foldRight. Part of the exercise is
