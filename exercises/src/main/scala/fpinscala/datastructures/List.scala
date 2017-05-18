@@ -72,7 +72,16 @@ object List { // `List` companion object. Contains functions for creating and wo
     case _ => l
   }
 
-  def init[A](l: List[A]): List[A] = ???
+  
+
+  def init[A](l: List[A]): List[A] = {
+    def go(oldList: List[A], newList: List[A]): List[A] = oldList match {
+      case Cons(h, t) if t != Nil => go(t, Cons(h, newList))
+      case _ => newList
+    }
+
+    go(l, List())
+  }
 
   def length[A](l: List[A]): Int = ???
 
